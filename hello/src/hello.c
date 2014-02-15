@@ -6,33 +6,43 @@ static GRect window_frame;
 static AppTimer *timer;
 static TextLayer *text_layer;
 
-int x_out, y_out, z_out;
+int counter = 0;
+int sumx=0; int sumy=0; int sumz=0;
 
 static void timer_callback(void *data) {
 
   //char *output = NULL;
   //output = malloc(100);
-
-  int i, sumx, sumy, sumz;
-  //double x_out, y_out, z_out;
-
-  for (i=1; i<=10; i++) {
-    AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
-    accel_service_peek(&accel);
+  
+  AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
+  accel_service_peek(&accel);
     
-    sumx += accel.x;
-    sumy += accel.y;
-    sumz += accel.z;
+  sumx += accel.x;
+  sumy += accel.y;
+  sumz += accel.z;
     
-    //snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
-    //text_layer_set_text(text_layer, output);
-    //free(output);
-    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
+  //snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
+  //text_layer_set_text(text_layer, output);
+  //free(output);
+  counter++;
+
+  if (counter==10) {
+    char *output = NULL;
+    int x_out, y_out, z_out;
+    output = malloc(100);
+
+    x_out = sumx / 10;
+    y_out = sumy / 10;
+    z_out = sumz / 10;
+    sumx=0; sumy=0; sumz=0; 
+    counter=0;
+
+    snprintf(output, 99, "X: %d, Y: %d, Z: %d", x_out, y_out, z_out);
+    text_layer_set_text(text_layer, output);
+    free(output);
   }
 
-  x_out = sumx / 10;
-  y_out = sumy / 10;
-  z_out = sumz / 10; 
+  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
 }
 
 static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
@@ -43,7 +53,6 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   text_layer = text_layer_create((GRect) { .origin = { 0, 62 }, .size = { bounds.size.w, 40 } });
-  
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
