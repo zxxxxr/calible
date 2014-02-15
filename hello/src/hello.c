@@ -1,6 +1,7 @@
 #include "pebble.h"
 #include "defines.h"
 #include "comm.h"
+#include "lock.h"
 
 static Window *window;
 static GRect window_frame;
@@ -17,7 +18,7 @@ int toggle = 0;
 static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
-  if(toggle == 1 || (counter < threshold && counter != 0)){
+  if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
     timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
   }
   sumx += accel.x;
@@ -42,6 +43,9 @@ static void timer_callback(void *data) {
     Tuplet msg_3 = TupletInteger(3,y_out);
     Tuplet msg_4 = TupletInteger(4,z_out);
     Tuplet msg_5 = TupletInteger(5,toggle);
+    if(toggle == 0){
+      lock_off();
+    }
     Tuplet** msg = NULL;
     msg = malloc(6*sizeof(void*));
 
@@ -80,6 +84,7 @@ static void window_load(Window *window) {
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   toggle = (toggle + 1) % 2;
   if(toggle == 0){
+    lock_on();
     text_layer_set_text(text_layer,"Stopped!");
   }else{
     text_layer_set_text(text_layer,"Measuring...");
