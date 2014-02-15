@@ -28,9 +28,9 @@ static void timer_callback(void *data) {
   int sign_x = ((accel.x - accel_g.x) > 0 ? 1 : -1);
   int sign_y = ((accel.y - accel_g.y) > 0 ? 1 : -1);
   int sign_z = ((accel.z - accel_g.z) > 0 ? 1 : -1);
-  v_out.x += sign_x * ((accel.x - accel_g.x + 50) / 100) * 100;
-  v_out.y += sign_y * ((accel.y - accel_g.y + 50) / 100) * 100;
-  v_out.z += sign_z * ((accel.z - accel_g.z + 50) / 100) * 100;
+  v_out.x += ((accel.x - accel_g.x + sign_x * 50) / 100) * 100;
+  v_out.y += ((accel.y - accel_g.y + sign_y * 50) / 100) * 100;
+  v_out.z += ((accel.z - accel_g.z + sign_z *50) / 100) * 100;
 
   counter++;
 
