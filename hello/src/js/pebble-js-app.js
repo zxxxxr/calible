@@ -9,10 +9,9 @@ Pebble.addEventListener("appmessage",
 function(e) {
   console.log("message");
   if (!e.playload.hasNext) {
-    console.log("Data ends");
+    console.log("Data ends.");
     return;
   }
-
   if (e.payload.time_s) {
     console.log("time_s = " + e.payload.s);
   }
