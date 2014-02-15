@@ -90,14 +90,14 @@ static void timer_callback(void *data) {
 
   accel_service_peek(&accel);
   
-  /* for (int i = 0; i < NUM_DISCS; i++) {
+  for (int i = 0; i < NUM_DISCS; i++) {
     Disc *disc = &discs[i];
     disc_apply_accel(disc, accel);
     disc_update(disc);
-  } */
+  }
 
-  // layer_mark_dirty(disc_layer);
-  snprintf(output, 199 , "X: %d", accel.x);
+  layer_mark_dirty(disc_layer);
+  snprintf(output, 199 , "%d", 100);
   text_layer_set_text(text_layer, output);
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
