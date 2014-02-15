@@ -24,6 +24,7 @@ static void timer_callback(void *data) {
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
     timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL); 
   }
+  APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL: %d | %d | %d", accel.x, accel.y, accel.z);
   int sign_x = ((accel.x - accel_g.x) > 0 ? 1 : -1);
   int sign_y = ((accel.y - accel_g.y) > 0 ? 1 : -1);
   int sign_z = ((accel.z - accel_g.z) > 0 ? 1 : -1);
