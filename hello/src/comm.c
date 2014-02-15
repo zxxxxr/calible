@@ -20,9 +20,9 @@ static void hook(void *recieved, void *dropped, void *fail){
   app_message_register_outbox_failed(fail);
 }
 
-static void open_chan(void *recieved, void *dropped, void *fail){
+static void open_chan(void){
   if (app_message_open(64, 64) == APP_MSG_OK) {
-    fetch_msg();
+    //fetch_msg();
   } else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "OPEN_CHAN: OOPS.");
   }
