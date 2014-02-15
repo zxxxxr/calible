@@ -85,7 +85,7 @@ static void disc_layer_update_callback(Layer *me, GContext *ctx) {
 }
 
 static void timer_callback(void *data) {
-  char output[200];
+  char* output = "hello";
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
   accel_service_peek(&accel);
@@ -97,7 +97,7 @@ static void timer_callback(void *data) {
   }
 
   layer_mark_dirty(disc_layer);
-  snprintf(output, 199 , "%d", 100);
+  //print(output);
   text_layer_set_text(text_layer, output);
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
