@@ -8,11 +8,12 @@
 typedef struct Vec2d {
   double x;
   double y;
-} Vec2d;
+  double z;
+} Vec3d;
 
 typedef struct Disc {
-  Vec2d pos;
-  Vec2d vel;
+  Vec3d pos;
+  Vec3d vel;
   double mass;
   double radius;
 } Disc;
@@ -29,6 +30,8 @@ static Layer *disc_layer;
 
 static AppTimer *timer;
 
+static TextLayer *text_layer;
+
 static double disc_calc_mass(Disc *disc) {
   return MATH_PI * disc->radius * disc->radius * DISC_DENSITY;
 }
@@ -37,22 +40,31 @@ static void disc_init(Disc *disc) {
   GRect frame = window_frame;
   disc->pos.x = frame.size.w/2;
   disc->pos.y = frame.size.h/2;
+  disc->pos.y = 100;
   disc->vel.x = 0;
   disc->vel.y = 0;
+  disc->vel.z = 0;
   disc->radius = next_radius;
   disc->mass = disc_calc_mass(disc);
   next_radius += 0.5;
 }
 
-static void disc_apply_force(Disc *disc, Vec2d force) {
+static void disc_apply_force(Disc *disc, Vec3d force) {
+  char* output;
+  output = malloc(100);
   disc->vel.x += force.x / disc->mass;
   disc->vel.y += force.y / disc->mass;
+  disc->vel.z += force.z / disc->mass;
+  snprintf(output, 99, "Vx: %d, Vy: %d, Vz: %d",(int)(disc->vel.x * 100), (int)(disc->vel.y * 100), (int)(disc->vel.z * 100));  
+  text_layer_set_text(text_layer,output);
+  free(output);
 }
 
 static void disc_apply_accel(Disc *disc, AccelData accel) {
-  Vec2d force;
+  Vec3d force;
   force.x = accel.x * ACCEL_RATIO;
   force.y = -accel.y * ACCEL_RATIO;
+  force.z = accel.z * ACCEL_RATIO;
   disc_apply_force(disc, force);
 }
 
@@ -67,6 +79,7 @@ static void disc_update(Disc *disc) {
     || (disc->pos.y + disc->radius > frame.size.h && disc->vel.y > 0)) {
     disc->vel.y = -disc->vel.y * e;
   }
+  disc->pos.z += disc->vel.z;
   disc->pos.x += disc->vel.x;
   disc->pos.y += disc->vel.y;
 }
@@ -113,6 +126,12 @@ static void window_load(Window *window) {
   for (int i = 0; i < NUM_DISCS; i++) {
     disc_init(&discs[i]);
   }
+  
+  GRect bounds = layer_get_bounds(window_layer);
+  text_layer = text_layer_create((GRect) { .origin = { 0, 0 }, .size = { bounds.size.w, 40 } });
+  text_layer_set_text(text_layer,"Vx: 0, Vy: 0, Vz: 0");
+  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
+  layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
 
 static void window_unload(Window *window) {
