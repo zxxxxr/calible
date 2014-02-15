@@ -12,7 +12,10 @@ int total=0, bad=0;
 int counter = 0;
 int threshold = 10;
 int sumx = 0; int sumy = 0; int sumz = 0;
+//double time_last, time_now;
 int toggle = 0;
+int vx = 0; int vy = 0; int vz = 0;
+AccelData accel_g;
 
 
 static void timer_callback(void *data) {
@@ -21,27 +24,32 @@ static void timer_callback(void *data) {
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
     timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
   }
-  sumx += accel.x;
-  sumy += accel.y;
-  sumz += accel.z;
+  vx += (accel.x - accel_g.x);
+  vy += (accel.y - accel_g.y);
+  vz += (accel.z - accel_g.z);
 
   counter++;
 
   if (counter == threshold) {
-  	
-    int x_out, y_out, z_out;
+  	//int dt;
 
-    x_out = sumx / threshold;
-    y_out = sumy / threshold;
-    z_out = sumz / threshold;
-    sumx = 0; sumy = 0; sumz = 0; 
+    //int x_out, y_out, z_out;
+    //time_now = time(NULL) + time_ms(NULL,NULL)/1000;
+    //dt = time_now - time_last;
+    //time_last = time_now;
+
+    //vx += (sumx / threshold); //* dt;
+    //vy += (sumy / threshold); //* dt;
+    //vz += (sumz / threshold); //* dt;
+
+    //sumx = 0; sumy = 0; sumz = 0; 
     counter = 0;
 
     Tuplet msg_0 = TupletInteger(0,time(NULL));
     Tuplet msg_1 = TupletInteger(1,time_ms(NULL,NULL));
-    Tuplet msg_2 = TupletInteger(2,x_out);
-    Tuplet msg_3 = TupletInteger(3,y_out);
-    Tuplet msg_4 = TupletInteger(4,z_out);
+    Tuplet msg_2 = TupletInteger(2,vx);
+    Tuplet msg_3 = TupletInteger(3,vy);
+    Tuplet msg_4 = TupletInteger(4,vz);
     Tuplet msg_5 = TupletInteger(5,toggle);
     if(toggle == 0){
       lock_off();
@@ -88,6 +96,8 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     text_layer_set_text(text_layer,"Stopped!");
   }else{
     text_layer_set_text(text_layer,"Measuring...");
+    accel_g = (AccelData) { .x = 0, .y = 0, .z = 0 };
+    accel_service_peek(&accel_g);
     timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
   }
 }
