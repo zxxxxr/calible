@@ -29,6 +29,8 @@ static Layer *disc_layer;
 
 static AppTimer *timer;
 
+static TextLayer *text_layer;
+
 static double disc_calc_mass(Disc *disc) {
   return MATH_PI * disc->radius * disc->radius * DISC_DENSITY;
 }
@@ -83,10 +85,11 @@ static void disc_layer_update_callback(Layer *me, GContext *ctx) {
 }
 
 static void timer_callback(void *data) {
+  char* output;
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
   accel_service_peek(&accel);
-
+  
   for (int i = 0; i < NUM_DISCS; i++) {
     Disc *disc = &discs[i];
     disc_apply_accel(disc, accel);
@@ -94,7 +97,9 @@ static void timer_callback(void *data) {
   }
 
   layer_mark_dirty(disc_layer);
-
+  sprintf(output, "X: %d, Y: %d, Z:%d", accel.x, accel.y, accel.z);
+  text_layer_set_text(text_layer, output);
+  
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
 }
 
@@ -105,11 +110,15 @@ static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect frame = window_frame = layer_get_frame(window_layer);
-
+  text_layer = text_layer_create((GRect) { .origin = { 0, 72 }, .size = { bounds.size.w, 20 } });
   disc_layer = layer_create(frame);
+  
   layer_set_update_proc(disc_layer, disc_layer_update_callback);
   layer_add_child(window_layer, disc_layer);
-
+  
+  text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
+  layer_add_child(window_layer, text_layer_get_layer(text_layer));
+  
   for (int i = 0; i < NUM_DISCS; i++) {
     disc_init(&discs[i]);
   }
