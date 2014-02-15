@@ -85,7 +85,11 @@ static void window_load(Window *window) {
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   toggle = (toggle + 1) % 2;
-  text_layer_set_text(text_layer,"Stopped!");
+  if(toggle == 0){
+    text_layer_set_text(text_layer,"Stopped!");
+  }else{
+    text_layer_set_text(text_layer,"Measuring...");
+  }
 }
 
 static void click_config_provider(void *context) {
