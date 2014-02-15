@@ -1,6 +1,6 @@
 #include "pebble.h"
 
-static void send_msg(uint8_t len, Tuplet* data[]) {
+static void send_msg(uint8_t len, Tuplet** data) {
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
   if (iter == NULL) {
