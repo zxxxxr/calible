@@ -15,6 +15,7 @@ function(e) {
     console.log("Data ends.");
     console.log("  ");
     getDistance(points);
+    points = [];
     return;
   }
   if (e.payload.time_s) {
