@@ -53,7 +53,7 @@ static void timer_callback(void *data) {
     msg[4] = &msg_4;
     msg[5] = &msg_5;
 
-    open_chan();
+    
     send_msg(6, msg);
     free(msg);
   }
@@ -78,6 +78,7 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
+  open_chan();
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
