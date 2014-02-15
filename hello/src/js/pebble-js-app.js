@@ -38,6 +38,7 @@ function(e) {
 
 
 var getDistance = function (sorted) {
+  console.log("CALLed getDistance");
   var vx = 0;
   var vy = 0;
   var vz = 0;
