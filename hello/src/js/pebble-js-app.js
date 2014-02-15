@@ -102,6 +102,9 @@ var getDistance = function (sorted) {
     dis += s;
   }
   console.log("DISTANCE = " + dis);
+  console.log({
+  	data:points
+  });
 };
 
 /*
