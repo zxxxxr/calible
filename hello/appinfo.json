@@ -9,14 +9,13 @@
     "watchface": false
   },
   "appKeys": {
-    "time_s"  : 0,
-    "time_ms" : 1,
-    "x"       : 2,
-    "y"       : 3,
-    "z"       : 4,
-    'hasNext' : 5
+    "time_s": 0,
+    "time_ms": 1,
+    "x": 2,
+    "y": 3,
+    "z": 4,
+    "hasNext" : 5
   },
-
   "resources": {
     "media": []
   }
