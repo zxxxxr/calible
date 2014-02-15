@@ -30,7 +30,7 @@ static void timer_callback(void *data) {
   text_layer_set_text(text_layer, output);
   free(output);
   
-  timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
+  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
 }
 
 static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
@@ -60,7 +60,7 @@ static void init(void) {
 
   accel_data_service_subscribe(0, handle_accel);
 
-  timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
+  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
 }
 
 static void deinit(void) {
