@@ -1,9 +1,5 @@
 #include "pebble.h"
-
-#define MATH_PI 3.141592653589793238462
-#define NUM_DISCS 20
-#define DISC_DENSITY 0.25
-#define ACCEL_RATIO 0.05
+#include "defines.h"
 
 static double next_radius = 3;
 
@@ -19,15 +15,16 @@ static TextLayer *text_layer;
 
 static void timer_callback(void *data) {
   char *output = NULL;
-  output = malloc(100);
+  output = malloc(BUFSMALL);
   
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
   accel_service_peek(&accel);
   
-  snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
+  snprintf(output,BUFSMALL, "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
   
   text_layer_set_text(text_layer, output);
+  
   free(output);
   
   timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
@@ -65,7 +62,6 @@ static void init(void) {
 
 static void deinit(void) {
   accel_data_service_unsubscribe();
-
   window_destroy(window);
 }
 

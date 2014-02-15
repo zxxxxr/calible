@@ -1,5 +1,5 @@
-nclude "pebble_os.h"
-#include "http.h"
+//#include "pebble_os.h"
+//#include "http.h"
 
 #define HTTP_URL_KEY 0xFFFF
 #define HTTP_STATUS_KEY 0xFFFE
