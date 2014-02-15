@@ -23,7 +23,7 @@ static void timer_callback(void *data) {
 
   accel_service_peek(&accel);
   
-  snprintf(output,0, "X = %d, Y = %d,\n Z = %d", accel.x, accel.y, accel.z);
+  snprintf(output,199, "X = %d, Y = %d, Z = %d", accel.x, accel.y, accel.z);
   
   text_layer_set_text(text_layer, output);
   
