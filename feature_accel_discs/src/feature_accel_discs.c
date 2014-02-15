@@ -47,12 +47,14 @@ static void disc_init(Disc *disc) {
 static void disc_apply_force(Disc *disc, Vec2d force) {
   disc->vel.x += force.x / disc->mass;
   disc->vel.y += force.y / disc->mass;
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "VELX: %d VELY: %d", (int)(disc->vel.x * 100), (int)(disc->vel.y * 100));
 }
 
 static void disc_apply_accel(Disc *disc, AccelData accel) {
   Vec2d force;
   force.x = accel.x * ACCEL_RATIO;
   force.y = -accel.y * ACCEL_RATIO;
+  
   disc_apply_force(disc, force);
 }
 
