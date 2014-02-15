@@ -25,9 +25,9 @@ static void timer_callback(void *data) {
     timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL); 
   }
   APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL: %d | %d | %d", accel.x, accel.y, accel.z);
-  int sign_x = (accel.x > 0 ? 1 : -1);
-  int sign_y = (accel.y > 0 ? 1 : -1);
-  int sign_z = (accel.z > 0 ? 1 : -1);
+  int sign_x = (accel.x - accel_g.x > 0 ? 1 : -1);
+  int sign_y = (accel.y - accel_g.y > 0 ? 1 : -1);
+  int sign_z = (accel.z - accel_g.z > 0 ? 1 : -1);
   v_out.x += ((accel.x - accel_g.x + sign_x * 50) / 100) * 100;
   v_out.y += ((accel.y - accel_g.y + sign_y * 50) / 100) * 100;
   v_out.z += ((accel.z - accel_g.z + sign_z * 50) / 100) * 100;
@@ -84,13 +84,29 @@ static void window_load(Window *window) {
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   toggle = (toggle + 1) % 2;
   if(toggle == 0){
+    char *output = NULL;
+    output = malloc(100);
+
     lock_on();
     text_layer_set_text(text_layer,"Stopped!");
+
+    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", accel_g.x, accel_g.y, accel_g.z);
+    text_layer_set_text(text_layer,output);
+
+    free(output);
   }else{
+    char *output = NULL;
+    output = malloc(100);
+
     text_layer_set_text(text_layer,"Measuring...");
     v_out = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_g = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_service_peek(&accel_g);
+
+    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", accel_g.x, accel_g.y, accel_g.z);
+    text_layer_set_text(text_layer,output);
+
+    free(output);
     timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL);
   }
 }
