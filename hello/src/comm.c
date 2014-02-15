@@ -1,18 +1,19 @@
 #include "pebble.h"
 #include "comm.h"
 
-void send_msg(uint8_t len, Tuplet** data) {
+uint8_t send_msg(uint8_t len, Tuplet** data) {
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
   if (iter == NULL) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "SEND_MSG: ERROR NO CHANNEL");
-    return;
+    APP_LOG(APP_LOG_LEVEL_WARNING, "SEND_MSG: ERROR NO CHANNEL");
+    return 1;
   }
   for (uint8_t i = 0; i < len; i++){
     dict_write_tuplet(iter, data[i]);
   }
   dict_write_end(iter);
   app_message_outbox_send();
+  return 0;
 }
 
 void hook(void *received, void *dropped, void *fail){

@@ -1,6 +1,6 @@
 #pragma once
 
-void send_msg(uint8_t len, Tuplet** data);
+uint8_t send_msg(uint8_t len, Tuplet** data);
 
 void open_chan(void);
 
