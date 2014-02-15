@@ -85,7 +85,7 @@ static void disc_layer_update_callback(Layer *me, GContext *ctx) {
 }
 
 static void timer_callback(void *data) {
-  char* output;
+  char output[200];
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
   accel_service_peek(&accel);
@@ -97,7 +97,7 @@ static void timer_callback(void *data) {
   }
 
   layer_mark_dirty(disc_layer);
-  sprintf(output, "X: %d, Y: %d, Z:%d", accel.x, accel.y, accel.z);
+  snprintf(output, 100 , "X: %d, Y: %d, Z:%d", accel.x, accel.y, accel.z);
   text_layer_set_text(text_layer, output);
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
@@ -110,6 +110,7 @@ static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect frame = window_frame = layer_get_frame(window_layer);
+  GRect bounds = layer_get_bounds(window_layer);
   text_layer = text_layer_create((GRect) { .origin = { 0, 72 }, .size = { bounds.size.w, 20 } });
   disc_layer = layer_create(frame);
   
