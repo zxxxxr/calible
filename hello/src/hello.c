@@ -15,20 +15,17 @@ int toggle = 0;
 
 
 static void timer_callback(void *data) {
-
-  //char *output = NULL;
-  //output = malloc(100);
-  
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
-    
+  
+  if(toggle == 1){
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
+  }
+  
   sumx += accel.x;
   sumy += accel.y;
   sumz += accel.z;
-    
-  //snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
-  //text_layer_set_text(text_layer, output);
-  //free(output);
+
   counter++;
 
   if (counter == threshold) {
@@ -66,9 +63,7 @@ static void timer_callback(void *data) {
     };
     free(msg);
   }
-  if(toggle == 1){
-    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
-  }
+  
 }
 
 static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
