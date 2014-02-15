@@ -27,7 +27,7 @@ static void timer_callback(void *data) {
   
   snprintf(output,99 , "PADDING X = %d", accel.x);
   
-  text_layer_set_text(text_layer, "output");
+  text_layer_set_text(text_layer, output);
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
 }
