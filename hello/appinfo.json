@@ -2,15 +2,21 @@
   "uuid": "dc5ce4a7-e75d-4063-a7e6-910c85df84bf",
   "shortName": "hello",
   "longName": "hello",
-  "companyName": "MakeAwesomeHappen",
+  "companyName": "calible",
   "versionCode": 1,
   "versionLabel": "1.0.0",
   "watchapp": {
     "watchface": false
   },
   "appKeys": {
-    "dummy": 0
+    "time_s"  : 0,
+    "time_ms" : 1,
+    "x"       : 2,
+    "y"       : 3,
+    "z"       : 4,
+    'hasNext' : 5
   },
+
   "resources": {
     "media": []
   }
