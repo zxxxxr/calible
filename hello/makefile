@@ -1,5 +1,5 @@
 IPADDR = 158.130.110.163
-all: clean build-all upload
+all: build-all upload
 git:
 	git pull
 	git add .
