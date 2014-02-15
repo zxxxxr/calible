@@ -18,8 +18,8 @@ static AppTimer *timer;
 static TextLayer *text_layer;
 
 static void timer_callback(void *data) {
-  char *str = NULL;
-  str = malloc(100);
+  char *output = NULL;
+  output = malloc(100);
   
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
