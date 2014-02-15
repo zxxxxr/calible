@@ -14,7 +14,7 @@ static void send_msg(uint8_t len, Tuplet* data[]) {
   app_message_outbox_send();
 }
 
-static void hook(void *recieved, void *dropped, void *fail){
+static void hook(void *received, void *dropped, void *fail){
   app_message_register_inbox_received(received);
   app_message_register_inbox_dropped(dropped);
   app_message_register_outbox_failed(fail);
