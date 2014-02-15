@@ -18,14 +18,16 @@ static AppTimer *timer;
 static TextLayer *text_layer;
 
 static void timer_callback(void *data) {
-  char output[100];
+  char *str = NULL;
+  str = malloc(100);
+  
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
 
   accel_service_peek(&accel);
   
   snprintf(output,99 , "PADDING X = %d", accel.x);
   
-  text_layer_set_text(text_layer, output);
+  text_layer_set_text(text_layer, "output");
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
 }
