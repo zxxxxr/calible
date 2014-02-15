@@ -102,9 +102,9 @@ var getDistance = function (sorted) {
     dis += s;
   }
   console.log("DISTANCE = " + dis);
-  console.log({
+  console.log(JSON.stringify({
   	data:points
-  });
+  }));
 };
 
 /*
