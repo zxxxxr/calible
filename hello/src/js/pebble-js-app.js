@@ -11,24 +11,25 @@ function(e) {
 Pebble.addEventListener("appmessage",
 function(e) {
   console.log("message");
-  if (!e.playload.hasNext) {
+  console.log(e);
+  if (!e.payload.hasNext) {
     console.log("Data ends.");
     return;
   }
   if (e.payload.time_s) {
-    console.log("time_s = " + e.payload.s);
+    console.log("time_s = " + e.payload.time_s);
   }
   if (e.payload.time_ms) {
-    console.log("time_ms = " + e.payload.ms);
+    console.log("time_ms = " + e.payload.time_ms);
   }
   if (e.payload.x) {
-    console.log("x = " + x);
+    console.log("x = " + e.payload.x);
   }
   if (e.payload.y) {
-    console.log("y = " + y);
+    console.log("y = " + e.payload.y);
   }
   if (e.payload.z) {
-    console.log("z = " + z);
+    console.log("z = " + e.payload.z);
   }
 
 });
