@@ -24,9 +24,9 @@ static void timer_callback(void *data) {
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
     timer = app_timer_register(50 /* milliseconds */, timer_callback, NULL); 
   }
-  v_out.x += ((accel.x - accel_g.x) / 100) * 100;
-  v_out.y += ((accel.y - accel_g.y) / 100) * 100;
-  v_out.z += ((accel.z - accel_g.z) / 100) * 100;
+  v_out.x += ((accel.x - accel_g.x + 50) / 100) * 100;
+  v_out.y += ((accel.y - accel_g.y + 50) / 100) * 100;
+  v_out.z += ((accel.z - accel_g.z + 50) / 100) * 100;
 
   counter++;
 
