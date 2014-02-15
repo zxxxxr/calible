@@ -11,7 +11,7 @@ int total=0, bad=0;
 int counter = 0;
 int threshold = 10;
 int sumx = 0; int sumy = 0; int sumz = 0;
-int toggle = 1;
+int toggle = 0;
 
 
 static void timer_callback(void *data) {
@@ -66,8 +66,9 @@ static void timer_callback(void *data) {
     };
     free(msg);
   }
-
-  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
+  if(toggle == 1){
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
+  }
 }
 
 static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
@@ -78,7 +79,7 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   text_layer = text_layer_create((GRect) { .origin = { 0, 62 }, .size = { bounds.size.w, 40 } });
-  text_layer_set_text(text_layer,"Measuring...");
+  text_layer_set_text(text_layer,"Press SELECT to start!");
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
@@ -89,6 +90,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     text_layer_set_text(text_layer,"Stopped!");
   }else{
     text_layer_set_text(text_layer,"Measuring...");
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
   }
 }
 
@@ -112,7 +114,7 @@ static void init(void) {
 
   accel_data_service_subscribe(0, handle_accel);
 
-  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
+  //timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
 }
 
 static void deinit(void) {
