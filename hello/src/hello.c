@@ -1,4 +1,5 @@
 #include "pebble.h"
+#include "math.h"
 
 #define MATH_PI 3.141592653589793238462
 #define NUM_DISCS 20
@@ -17,20 +18,33 @@ static AppTimer *timer;
 
 static TextLayer *text_layer;
 
-static void timer_callback(void *data) {
-  char *output = NULL;
-  output = malloc(100);
-  
-  AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
+int x_out, y_out, z_out;
 
-  accel_service_peek(&accel);
+static void timer_callback(void *data) {
+  //char *output = NULL;
+  //output = malloc(100);
+
+  int i, sumx, sumy, sumz;
+  //double x_out, y_out, z_out;
+
+  for (i=1; i<=10; i++) {
+    AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
+    accel_service_peek(&accel);
+    
+    sumx += accel.x;
+    sumy += accel.y;
+    sumz += accel.z;
+    
+    //snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
+    //text_layer_set_text(text_layer, output);
+    //free(output);
   
-  snprintf(output,99 , "X: %d, Y: %d, Z: %d", accel.x, accel.y, accel.z);
-  
-  text_layer_set_text(text_layer, output);
-  free(output);
-  
-  timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
+  }
+
+  x_out = sumx / 10;
+  y_out = sumy / 10;
+  z_out = sumz / 10; 
 }
 
 static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
