@@ -49,6 +49,10 @@ var getDistance = function (sorted) {
   var ay0 = sorted[0].y;
   var az0 = sorted[0].z;
 
+  var px = 0;
+  var py = 0;
+  var pz = 0;
+
   sorted[0].time = sorted[0].time_s + sorted[0].time_ms / 1000;
   //startTime = sorted[0].time;
 
@@ -68,9 +72,13 @@ var getDistance = function (sorted) {
     var dy = vy * dt + 0.5 * ay * dt * dt;
     var dz = vz * dt + 0.5 * az * dt * dt;
 
-    //console.log("DX = " + dx);
-    //console.log("DY = " + dy);
-    //console.log("DZ = " + dz);
+    px += dx;
+    py += dy;
+    pz += dz;
+
+    console.log("PX = " + px);
+    console.log("PY = " + py);
+    console.log("PZ = " + pz);
 
     vx += ax * dt;
     vy += ay * dt;
