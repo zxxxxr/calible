@@ -7,7 +7,9 @@ static GRect window_frame;
 static AppTimer *timer;
 static TextLayer *text_layer;
 
+int total=0, bad=0;
 int counter = 0;
+const int threshold = 10;
 int sumx=0; int sumy=0; int sumz=0;
 
 static void timer_callback(void *data) {
@@ -27,12 +29,12 @@ static void timer_callback(void *data) {
   //free(output);
   counter++;
 
-  if (counter==10) {
+  if (counter==threshold) {
     int x_out, y_out, z_out;
 
-    x_out = sumx / 10;
-    y_out = sumy / 10;
-    z_out = sumz / 10;
+    x_out = sumx / threshold;
+    y_out = sumy / threshold;
+    z_out = sumz / threshold;
     sumx=0; sumy=0; sumz=0; 
     counter=0;
 
@@ -53,8 +55,13 @@ static void timer_callback(void *data) {
     msg[4] = &msg_4;
     msg[5] = &msg_5;
 
-    
-    send_msg(6, msg);
+
+    total++;
+    bad += send_msg(6, msg));
+    if ((double)bad/total > 0.1) {
+      threshold += 5;
+      bad = bad/2;
+    };
     free(msg);
   }
 
