@@ -68,16 +68,22 @@ var getDistance = function (sorted) {
     var dy = vy * dt + 0.5 * ay * dt * dt;
     var dz = vz * dt + 0.5 * az * dt * dt;
 
+    //console.log("DX = " + dx);
+    //console.log("DY = " + dy);
+    //console.log("DZ = " + dz);
+
     vx += ax * dt;
     vy += ay * dt;
     vz += az * dt;
 
-    console.log("VX = " + vx);
-    console.log("VY = " + vy);
-    console.log("VZ = " + vz);
+    //console.log("VX = " + vx);
+    //console.log("VY = " + vy);
+    //console.log("VZ = " + vz);
 
     var s  = Math.sqrt(dx*dx + dy*dy + dz*dz);
-    console.log('s = ' + s);
+    
+    console.log('package '+ i + " s : " + s + "  dt= " + dt);
+    console.log(' ');
     dis += s;
   }
   console.log("DISTANCE = " + dis);
