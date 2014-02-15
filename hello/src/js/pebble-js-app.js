@@ -19,19 +19,19 @@ function(e) {
     return;
   }
   if (e.payload.time_s) {
-    console.log("time_s = " + e.payload.time_s);
+    //console.log("time_s = " + e.payload.time_s);
   }
   if (e.payload.time_ms) {
-    console.log("time_ms = " + e.payload.time_ms);
+    //console.log("time_ms = " + e.payload.time_ms);
   }
   if (e.payload.x) {
-    console.log("x = " + e.payload.x);
+    //console.log("x = " + e.payload.x);
   }
   if (e.payload.y) {
-    console.log("y = " + e.payload.y);
+    //console.log("y = " + e.payload.y);
   }
   if (e.payload.z) {
-    console.log("z = " + e.payload.z);
+    //console.log("z = " + e.payload.z);
   }
 
   points.push(e.payload);
@@ -55,21 +55,29 @@ var getDistance = function (sorted) {
   for (var i = 1; i < sorted.length; i++) {
     sorted[i].time = (sorted[i].time_s) + (sorted[i].time_ms/1000);
     var dt = sorted[i].time - sorted[i-1].time;
-   
+
     var ax = (sorted[i].x - ax0) / 100;
     var ay = (sorted[i].y - ay0) / 100;
     var az = (sorted[i].z - az0) / 100;
 
-    var dx = vx + 0.5 * ax * dt * dt;
-    var dy = vy + 0.5 * ay * dt * dt;
-    var dz = vz + 0.5 * az * dt * dt;
+    console.log("AX = " + ax);
+    console.log("AY = " + ay);
+    console.log("AZ = " + az);
+
+    var dx = vx * dt + 0.5 * ax * dt * dt;
+    var dy = vy * dt + 0.5 * ay * dt * dt;
+    var dz = vz * dt + 0.5 * az * dt * dt;
 
     vx += ax * dt;
     vy += ay * dt;
     vz += az * dt;
 
+    console.log("VX = " + vx);
+    console.log("VY = " + vy);
+    console.log("VZ = " + vz);
+
     var s  = Math.sqrt(dx*dx + dy*dy + dz*dz);
-    //console.log('s = ' + s);
+    console.log('s = ' + s);
     dis += s;
   }
   console.log("DISTANCE = " + dis);
