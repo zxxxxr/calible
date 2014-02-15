@@ -97,7 +97,7 @@ static void timer_callback(void *data) {
   }
 
   layer_mark_dirty(disc_layer);
-  snprintf(output, 199 , "X: %.3f, Y: %.3f, Z:%.3f", accel.x, accel.y, accel.z);
+  snprintf(output, 199 , "X: %d", accel.x);
   text_layer_set_text(text_layer, output);
   
   timer = app_timer_register(100 /* milliseconds */, timer_callback, NULL);
