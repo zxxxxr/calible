@@ -1,4 +1,5 @@
 #include "pebble.h"
+#include "comm.h"
 
 static void send_msg(uint8_t len, Tuplet** data) {
   DictionaryIterator *iter;
