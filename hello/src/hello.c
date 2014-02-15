@@ -22,27 +22,15 @@ static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
-    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
+    timer = app_timer_register(50 /* milliseconds */, timer_callback, NULL); 
   }
-  v_out.x += (accel.x - accel_g.x);
-  v_out.y += (accel.y - accel_g.y);
-  v_out.z += (accel.z - accel_g.z);
+  v_out.x += ((accel.x - accel_g.x) / 100) * 100;
+  v_out.y += ((accel.y - accel_g.y) / 100) * 100;
+  v_out.z += ((accel.z - accel_g.z) / 100) * 100;
 
   counter++;
 
   if (counter == threshold) {
-  	//int dt;
-
-    //int x_out, y_out, z_out;
-    //time_now = time(NULL) + time_ms(NULL,NULL)/1000;
-    //dt = time_now - time_last;
-    //time_last = time_now;
-
-    //vx += (sumx / threshold); //* dt;
-    //vy += (sumy / threshold); //* dt;
-    //vz += (sumz / threshold); //* dt;
-
-    //sumx = 0; sumy = 0; sumz = 0; 
     counter = 0;
 
     Tuplet msg_0 = TupletInteger(0,time(NULL));
@@ -99,7 +87,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     v_out = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_g = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_service_peek(&accel_g);
-    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
+    timer = app_timer_register(50 /* milliseconds */, timer_callback, NULL);
   }
 }
 
