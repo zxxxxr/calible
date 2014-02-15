@@ -1,5 +1,6 @@
 #include "pebble.h"
 #include "defines.h"
+#include "comm.h"
 
 static Window *window;
 static GRect window_frame;
@@ -40,6 +41,26 @@ static void timer_callback(void *data) {
     snprintf(output, 99, "X: %d, Y: %d, Z: %d,\n T: %d, T_ms: %d", x_out, y_out, z_out, (int)time(NULL), (int)time_ms(NULL, NULL));
     text_layer_set_text(text_layer, output);
     free(output);
+
+    Tuplet msg_0 = TupletInteger(0,time(NULL));
+    Tuplet msg_1 = TupletInteger(1,time_ms(NULL,NULL));
+    Tuplet msg_2 = TupletInteger(2,x_out);
+    Tuplet msg_3 = TupletInteger(3,y_out);
+    Tuplet msg_4 = TupletInteger(4,z_out);
+    Tuplet msg_5 = TupletInteger(5,1);
+
+    Tuplet** msg = NULL;
+    msg = malloc(6*sizeof(void*));
+
+    msg[0] = &msg_0;
+    msg[1] = &msg_1;
+    msg[2] = &msg_2;
+    msg[3] = &msg_3;
+    msg[4] = &msg_4;
+    msg[5] = &msg_5;
+
+    open_chan();
+    send_msg(6, msg);
   }
 
   timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
