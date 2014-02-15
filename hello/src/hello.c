@@ -22,11 +22,14 @@ static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
-    timer = app_timer_register(50 /* milliseconds */, timer_callback, NULL); 
+    timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL); 
   }
-  v_out.x += ((accel.x - accel_g.x + 50) / 100) * 100;
-  v_out.y += ((accel.y - accel_g.y + 50) / 100) * 100;
-  v_out.z += ((accel.z - accel_g.z + 50) / 100) * 100;
+  int sign_x = (accel.x > 0 ? 1 : -1);
+  int sign_y = (accel.y > 0 ? 1 : -1);
+  int sign_z = (accel.z > 0 ? 1 : -1);
+  v_out.x += sign_x * ((accel.x - accel_g.x + 50) / 100) * 100;
+  v_out.y += sign_y * ((accel.y - accel_g.y + 50) / 100) * 100;
+  v_out.z += sign_z * ((accel.z - accel_g.z + 50) / 100) * 100;
 
   counter++;
 
@@ -87,7 +90,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     v_out = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_g = (AccelData) { .x = 0, .y = 0, .z = 0 };
     accel_service_peek(&accel_g);
-    timer = app_timer_register(50 /* milliseconds */, timer_callback, NULL);
+    timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL);
   }
 }
 
@@ -108,7 +111,7 @@ static void init(void) {
   window_set_background_color(window, GColorBlack);
   window_set_click_config_provider(window, click_config_provider);
 
-  accel_data_service_subscribe(0, handle_accel);
+  accel_data_service_subscribe(25, handle_accel);
   
   open_chan(); /* Open a channel to send data */
 }
