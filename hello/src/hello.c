@@ -8,7 +8,9 @@ static AppTimer *timer;
 static TextLayer *text_layer;
 
 int counter = 0;
-int sumx=0; int sumy=0; int sumz=0;
+int sumx = 0; int sumy = 0; int sumz = 0;
+int toggle = 1;
+
 
 static void timer_callback(void *data) {
 
@@ -41,7 +43,7 @@ static void timer_callback(void *data) {
     Tuplet msg_2 = TupletInteger(2,x_out);
     Tuplet msg_3 = TupletInteger(3,y_out);
     Tuplet msg_4 = TupletInteger(4,z_out);
-    Tuplet msg_5 = TupletInteger(5,1);
+    Tuplet msg_5 = TupletInteger(5,toggle);
 
     Tuplet** msg = NULL;
     msg = malloc(6*sizeof(void*));
@@ -74,6 +76,14 @@ static void window_load(Window *window) {
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
 
+static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+  toggle = (toggle + 1) % 2;
+}
+
+static void click_config_provider(void *context) {
+  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+}
+
 static void window_unload(Window *window) {
 }
 
@@ -86,6 +96,7 @@ static void init(void) {
   });
   window_stack_push(window, true /* Animated */);
   window_set_background_color(window, GColorBlack);
+  window_set_click_config_provider(window, click_config_provider);
 
   accel_data_service_subscribe(0, handle_accel);
 
