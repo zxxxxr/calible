@@ -37,7 +37,7 @@ static void timer_callback(void *data) {
     sumx=0; sumy=0; sumz=0; 
     counter=0;
 
-    snprintf(output, 99, "X: %d, Y: %d, Z: %d", x_out, y_out, z_out);
+    snprintf(output, 99, "X: %d, Y: %d, Z: %d,\n T: %d, T_ms: %d", x_out, y_out, z_out, (int)time(NULL), (int)time_ms(NULL, NULL));
     text_layer_set_text(text_layer, output);
     free(output);
   }
