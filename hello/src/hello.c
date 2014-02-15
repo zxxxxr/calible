@@ -17,7 +17,7 @@ int toggle = 0;
 static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
-  if(toggle == 1){
+  if(toggle == 1 || (counter < threshold && counter != 0)){
     APP_LOG(APP_LOG_LEVEL_DEBUG, "DBG: Toggle=%d reschedule", toggle);
     timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
   }
