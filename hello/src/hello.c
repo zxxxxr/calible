@@ -78,13 +78,14 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   text_layer = text_layer_create((GRect) { .origin = { 0, 62 }, .size = { bounds.size.w, 40 } });
-  text_layer_set_text(text_layer,"Measuring");
+  text_layer_set_text(text_layer,"Measuring...");
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
   toggle = (toggle + 1) % 2;
+  text_layer_set_text(text_layer,"Stopped!");
 }
 
 static void click_config_provider(void *context) {
