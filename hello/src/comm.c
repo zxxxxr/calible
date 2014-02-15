@@ -1,6 +1,10 @@
 #include "pebble.h"
 #include "comm.h"
 
+static void send_error_handler(DictionaryIterator *iter, AppMessageResult reason, void *context){
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "SEND_MSG: %d", reason);
+}
+
 uint8_t send_msg(uint8_t len, Tuplet** data) {
   DictionaryIterator *iter;
   switch(app_message_outbox_begin(&iter)){
@@ -9,6 +13,10 @@ uint8_t send_msg(uint8_t len, Tuplet** data) {
        break;
     case APP_MSG_INVALID_ARGS:
        APP_LOG(APP_LOG_LEVEL_WARNING, "SEND_MSG: E_INVALID_ARGS");
+       break;
+    case APP_MSG_OK:
+       break;
+    default:
        break;
   }
   if (iter == NULL) {
@@ -36,8 +44,4 @@ void open_chan(void){
   } else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "OPEN_CHAN: OOPS.");
   }
-}
-
-static void send_error_handler(DictionaryIterator *iter, AppMessageResult reason, void *context){
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "SEND_MSG: %d", reason);
 }
