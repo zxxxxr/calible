@@ -1,5 +1,6 @@
 #include "pebble.h"
 #include "defines.h"
+#include "comm.h"
 
 static Window *window;
 static GRect window_frame;
@@ -40,6 +41,34 @@ static void timer_callback(void *data) {
     snprintf(output, 99, "X: %d, Y: %d, Z: %d,\n T: %d, T_ms: %d", x_out, y_out, z_out, (int)time(NULL), (int)time_ms(NULL, NULL));
     text_layer_set_text(text_layer, output);
     free(output);
+
+    //Tuple msg_0 = (Tuple) {.key = 0, .length = 4, .type = TUPLE_INT, .value = (int)time_ms(NULL, NULL)};
+    //Tuple msg_1 = (Tuple) {.key = 1, .length = 2, .type = TUPLE_INT, .value = (int)time(NULL)};
+    //Tuple msg_2 = (Tuple) {.key = 2, .length = 2, .type = TUPLE_INT, .value = x_out};
+    //Tuple msg_3 = (Tuple) {.key = 3, .length = 2, .type = TUPLE_INT, .value = y_out}
+    //Tuple msg_4 = (Tuple) {.key = 4, .length = 2, .type = TUPLE_INT, .value = z_out}
+    //Tuple msg_5 = (Tuple) {.key = 5, .length = 2, .type = TUPLE_INT, .value = 0}
+
+    /*Tuplet *msg[] = {
+      TupletInteger((const Tuplet) {.type=TUPLE_UINT, .key=0, .integer={.storage=(uint32_t)time_ms(NULL, NULL), .width=32}}),
+      TupletInteger((const Tuplet) {.type=TUPLE_UINT, .key=1, .integer={.storage=(uint16_t)time(NULL), .width=16}}),
+      TupletInteger((const Tuplet) {.type=TUPLE_INT, .key=2, .integer={.storage=(uint16_t)x_out, .width=sizeof(uint16_t)}}),
+      TupletInteger((const Tuplet) {.type=TUPLE_INT, .key=3, .integer={.storage=(uint16_t)y_out, .width=sizeof(uint16_t)}}),
+      TupletInteger((const Tuplet) {.type=TUPLE_INT, .key=4, .integer={.storage=(uint16_t)z_out, .width=sizeof(uint16_t)}}),
+      TupletInteger((const Tuplet) {.type=TUPLE_INT, .key=5, .integer={.storage=(uint16_t)1, .width=sizeof(uint16_t)}})
+    } */
+
+    Tuplet *msg[] = {
+      TupletInteger(0,(uint32_t)time(NULL)),
+      TupletInteger(1,(uint16_t)time_ms(NULL,NULL)),
+      TupletInteger(2,(uint16_t)x_out),
+      TupletInteger(3,(uint16_t)y_out),
+      TupletInteger(4,(uint16_t)z_out),
+      TupletInteger(5,(uint16_t)1)
+    }
+
+    open_chan();
+    send_msg(6, msg);
   }
 
   timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
