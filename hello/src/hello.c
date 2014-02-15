@@ -18,7 +18,6 @@ static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
   if(toggle == 1 || (counter < threshold && counter != 0)){
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "DBG: Toggle=%d reschedule", toggle);
     timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
   }
   sumx += accel.x;
@@ -43,7 +42,6 @@ static void timer_callback(void *data) {
     Tuplet msg_3 = TupletInteger(3,y_out);
     Tuplet msg_4 = TupletInteger(4,z_out);
     Tuplet msg_5 = TupletInteger(5,toggle);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "DBG: Toggle=%d packet", toggle);
     Tuplet** msg = NULL;
     msg = malloc(6*sizeof(void*));
 
