@@ -1,16 +1,9 @@
 #include "pebble.h"
 #include "defines.h"
 
-static double next_radius = 3;
-
 static Window *window;
-
 static GRect window_frame;
-
-static Layer *disc_layer;
-
 static AppTimer *timer;
-
 static TextLayer *text_layer;
 
 static void timer_callback(void *data) {
