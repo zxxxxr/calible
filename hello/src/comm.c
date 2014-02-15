@@ -21,7 +21,7 @@ static void hook(void *received, void *dropped, void *fail){
 }
 
 static void open_chan(void){
-  if (app_message_open(64, 64) == APP_MSG_OK) {
+  if (app_message_open(64, APP_MESSAGE_INBOX_SIZE_MINIMUM) == APP_MSG_OK) {
     //fetch_msg();
   } else {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "OPEN_CHAN: OOPS.");
