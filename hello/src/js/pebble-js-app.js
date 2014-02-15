@@ -1,5 +1,6 @@
 var points = [];
 var startTime = undefined;
+var real_points = [];
 
 Pebble.addEventListener("ready",
 function(e) {
@@ -82,7 +83,12 @@ var getDistance = function (sorted) {
     px += dx;
     py += dy;
     pz += dz;
-
+    
+    real_points.push({
+    	x: px,
+    	y: py,
+    	z: pz
+    });
     //console.log("PX = " + px);
     //console.log("PY = " + py);
     //console.log("PZ = " + pz);
@@ -103,7 +109,7 @@ var getDistance = function (sorted) {
   }
   console.log("DISTANCE = " + dis);
   console.log(JSON.stringify({
-  	data:points
+  	data:real_points
   }));
 };
 
