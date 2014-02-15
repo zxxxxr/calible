@@ -28,19 +28,13 @@ static void timer_callback(void *data) {
   counter++;
 
   if (counter==10) {
-    char *output = NULL;
     int x_out, y_out, z_out;
-    output = malloc(100);
 
     x_out = sumx / 10;
     y_out = sumy / 10;
     z_out = sumz / 10;
     sumx=0; sumy=0; sumz=0; 
     counter=0;
-
-    snprintf(output, 99, "X: %d, Y: %d, Z: %d,\n T: %d, T_ms: %d", x_out, y_out, z_out, (int)time(NULL), (int)time_ms(NULL, NULL));
-    text_layer_set_text(text_layer, output);
-    free(output);
 
     Tuplet msg_0 = TupletInteger(0,time(NULL));
     Tuplet msg_1 = TupletInteger(1,time_ms(NULL,NULL));
@@ -61,6 +55,7 @@ static void timer_callback(void *data) {
 
     open_chan();
     send_msg(6, msg);
+    free(msg);
   }
 
   timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);  
@@ -74,6 +69,7 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   text_layer = text_layer_create((GRect) { .origin = { 0, 62 }, .size = { bounds.size.w, 40 } });
+  text_layer_set_text(text_layer,"Measuring");
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
 }
