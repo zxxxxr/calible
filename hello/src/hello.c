@@ -23,7 +23,7 @@ static void timer_callback(void *data) {
 
   accel_service_peek(&accel);
   
-  snprintf(output, 199, "X= %d, Y= %d,\n Z= %d", accel.x, accel.y, accel.z);
+  snprintf(output,199 , "X = %d, Y = %d,\n Z = %d", accel.x, accel.y, accel.z);
   
   text_layer_set_text(text_layer, output);
   
@@ -37,7 +37,7 @@ static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
-  text_layer = text_layer_create((GRect) { .origin = { 0, 72 }, .size = { bounds.size.w, 20 } });
+  text_layer = text_layer_create((GRect) { .origin = { 0, 62 }, .size = { bounds.size.w, 40 } });
   
   text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(text_layer));
