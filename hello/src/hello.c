@@ -58,7 +58,7 @@ static void timer_callback(void *data) {
 
     
     total++;
-    bad += send_msg(6, msg);
+    bad += 0;//send_msg(6, msg);
     if ((double)bad/total > 0.1) {
       threshold += 5;
       bad = bad/2;
