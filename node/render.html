@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Renderer</title>
+		<style>canvas{width:100%; height: 100%}</style>
+	</head>
+
+	<body>
+		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+		<script src="http://seas.upenn.edu/~zheyuan/res/OrbitControls.js"></script>
+		<script src="http://seas.upenn.edu/~zheyuan/res/jquery-1.6.2.js"></script>
+
+		<script>
+			var length = 10000;
+			
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+			renderer.domElement.style.position = "absolute";
+			renderer.domElement.style.top = "0";
+			renderer.domElement.style.left = "0";
+			renderer.domElement.style.right = "0";
+			renderer.domElement.style.bottom = "0";
+			camera.position.set(0,0,10);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+			var controls = new THREE.OrbitControls(camera, renderer.domElement);
+			controls.addEventListener('change', render);
+			
+			var axis_x_geometry = new THREE.Geometry();
+			var axis_y_geometry = new THREE.Geometry();
+			var axis_z_geometry = new THREE.Geometry();
+				
+			//draw axis
+			axis_x_geometry.vertices.push(new THREE.Vector3(length, 0, 0));
+			axis_x_geometry.vertices.push(new THREE.Vector3(-length, 0, 0));
+			var x_material = new THREE.LineBasicMaterial({color:0xff0000});
+			axis_y_geometry.vertices.push(new THREE.Vector3(0, length, 0));
+			axis_y_geometry.vertices.push(new THREE.Vector3(0, -length, 0));
+			var y_material = new THREE.LineBasicMaterial({color:0x0000ff});
+			axis_z_geometry.vertices.push(new THREE.Vector3(0, 0, length));
+			axis_z_geometry.vertices.push(new THREE.Vector3(0, 0, -length));
+			var z_material = new THREE.LineBasicMaterial({color:0xffff00});
+			var x_axis = new THREE.Line(axis_x_geometry, x_material);
+			var y_axis = new THREE.Line(axis_y_geometry, y_material);
+			var z_axis = new THREE.Line(axis_z_geometry, z_material);
+			scene.add(x_axis);
+			scene.add(y_axis);
+			scene.add(z_axis);
+
+			//draw graph
+			var graph_geometry = new THREE.Geometry();
+			$.ajax({
+				url: "/json",
+				dataType: "json",
+				success: function(data){
+						for(var i = 0 ; i< data.data.length; i++){
+							var x = (0 + data.data[i].x)/10000;
+							var y = (0 + data.data[i].y)/10000;
+							var z = (0 + data.data[i].z)/10000;
+							console.log(x+","+y+","+z);
+							graph_geometry.vertices.push(new THREE.Vector3(x,y,z));
+						}
+						//var x = (0 + data.data[0].x)/10000;
+						//var y = (0 + data.data[0].y)/10000;
+						//var z = (0 + data.data[0].z)/10000;
+						//geometry.vertices.push(new THREE.Vector3(x, y, z));
+						
+						var line = new THREE.Line(graph_geometry);
+						scene.add(line);
+						render();	
+					}
+				});
+			/*
+			geometry.vertices.push(new THREE.Vector3(-10,0,0));
+      			geometry.vertices.push(new THREE.Vector3(0, 10, 0));
+			geometry.vertices.push(new THREE.Vector3(10, 0, 10));
+
+			var line = new THREE.Line(geometry, material);
+			scene.add(line);
+
+*/
+			var render = function(){
+				requestAnimationFrame(render);
+				
+				renderer.render(scene, camera);
+				controls.update();
+			}
+		
+					
+			render();
+			
+		</script>
+	</body>
+</html>
