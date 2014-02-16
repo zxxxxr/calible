@@ -86,6 +86,6 @@ var getDistance = function (sorted) {
   	data:real_points
   }, function(e){
     if(!e)
-      console.log("Web data submitted!');
+      console.log("Web data submitted!");
   });
 };
