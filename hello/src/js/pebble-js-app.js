@@ -41,7 +41,7 @@ function(e) {
   	tdiff = nowtime - lastTime;
   	var newPoint = {
   		x:last_point.x + e.payload.x * tdiff,
-  		y:last_point.y + e.payload.y * tdiff
+  		y:last_point.y + e.payload.y * tdiff,
   		z:last_point.xz + e.payload.z * tdiff
   	};
   	console.log(newPoint);
