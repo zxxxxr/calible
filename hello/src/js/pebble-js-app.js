@@ -1,6 +1,6 @@
 var points = [];
-var startTime = undefined;
-var real_points = [];
+var lastTime = undefined;
+var real_points = [{x:0,y:0,z:0}];
 
 function webRequest(data, callback){
   var req = new XMLHttpRequest();
@@ -35,7 +35,25 @@ function(e) {
     points = [];
     return;
   }
-  points.push(e.payload);
+  var last_point = real_points[real_points.length - 1];
+  var tdiff = -1, nowtime = e.payload.time_s + (e.payload.time_ms / 1000);
+  if(lastTime != null){
+  	tdiff = nowtime - lastTime;
+  	var newPoint = {
+  		x:last_point.x + e.payload.x * tdiff,
+  		y:last_point.y + e.payload.y * tdiff
+  		z:last_point.xz + e.payload.z * tdiff
+  	};
+  	console.log(newPoint);
+  	real_points.push(newPoint);
+  	webRequest({
+ 		data:real_points
+	  }, function(e){
+		if(!e)
+		  console.log("Web data submitted!");
+	  });
+  }
+  lastTime = e.payload.time_s + (e.payload.time_ms / 1000);
 });
 
 
@@ -79,9 +97,7 @@ var getDistance = function (sorted) {
     dis += s;
   }
   console.log("DISTANCE = " + dis);
-  console.log(JSON.stringify({
-  	data:real_points
-  }));
+  console.log("NUM OF POINTS: " + real_points.length);
   webRequest({
   	data:real_points
   }, function(e){
