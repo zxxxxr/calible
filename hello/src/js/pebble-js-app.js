@@ -42,9 +42,9 @@ function(e) {
   	var newPoint = {
   		x:last_point.x + e.payload.x * tdiff,
   		y:last_point.y + e.payload.y * tdiff,
-  		z:last_point.xz + e.payload.z * tdiff
+  		z:last_point.z + e.payload.z * tdiff
   	};
-  	console.log(newPoint);
+  	console.log(JSON.stringify(newPoint));
   	real_points.push(newPoint);
   	webRequest({
  		data:real_points
