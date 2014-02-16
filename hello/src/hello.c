@@ -143,10 +143,10 @@ static void init(void) {
   window_stack_push(window, true);
   window_set_background_color(window, GColorBlack);
   window_set_click_config_provider(window, click_config_provider);
-
+  accel_service_set_sampling_rate(ACCEL_SAMPLING_100HZ);
+  accel_service_set_samples_per_update(10);
   //accel_data_service_subscribe(0, handle_accel);
   accel_tap_service_subscribe(handle_accel);
-
   open_chan(); /* Open a channel to send data */
 }
 
