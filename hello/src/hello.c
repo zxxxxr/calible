@@ -68,8 +68,23 @@ static void timer_callback(void *data) {
   
 }
 
-static void handle_accel(AccelData *accel_data, uint32_t num_samples) {
-  // do nothing
+static void handle_accel(AccelAxisType axis, int32_t direction) {
+  switch(axis){
+  	case ACCEL_AXIS_X:{
+  		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON X: %d", direction);
+  		break;
+  	}
+  	case ACCEL_AXIS_Y:{
+  		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON Y: %d", direction);
+  		break;
+  	}
+  	case ACCEL_AXIS_Z:{
+  		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON Z: %d", direction);
+  		break;
+  	}
+  		break;
+  	}
+  } 
 }
 
 static void window_load(Window *window) {
@@ -129,7 +144,8 @@ static void init(void) {
   window_set_click_config_provider(window, click_config_provider);
 
   accel_data_service_subscribe(0, handle_accel);
-  
+  accel_tap_service_subscribe(handle_accel);
+
   open_chan(); /* Open a channel to send data */
 }
 
