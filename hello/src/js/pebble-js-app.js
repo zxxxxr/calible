@@ -15,7 +15,7 @@ function webRequest(data, callback){
       }
     }
   }
-  req.send("data=" + encodeURIComponent(data));
+  req.send("data=" + encodeURIComponent(JSON.stringify(data)));
 };
 
 Pebble.addEventListener("ready",
