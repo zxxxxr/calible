@@ -22,9 +22,9 @@ static void timer_callback(void *data) {
   AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
-    timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL); 
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
   }
-  APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL: %d | %d | %d", accel.x, accel.y, accel.z);
+  //APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL: %d | %d | %d", accel.x, accel.y, accel.z);
   int sign_x = (accel.x - accel_g.x > 0 ? 1 : -1);
   int sign_y = (accel.y - accel_g.y > 0 ? 1 : -1);
   int sign_z = (accel.z - accel_g.z > 0 ? 1 : -1);
@@ -107,7 +107,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     text_layer_set_text(text_layer,output);
 
     free(output);
-    timer = app_timer_register(30 /* milliseconds */, timer_callback, NULL);
+    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL);
   }
 }
 
