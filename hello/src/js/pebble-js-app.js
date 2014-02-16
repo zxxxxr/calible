@@ -2,6 +2,22 @@ var points = [];
 var startTime = undefined;
 var real_points = [];
 
+function webRequest(data, callback){
+  var req = new XMLHttpRequest();
+  req.open('POST', 'http://ec2.maimoe.net:8888/upload', true);
+  req.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  req.onload = function(e) {
+    if (req.readyState == 4 && req.status == 200) {
+      if(req.status == 200) {
+        callback(false);
+      } else {
+        callback(true);
+      }
+    }
+  }
+  req.send("data=" + encodeURIComponent(data));
+};
+
 Pebble.addEventListener("ready",
 function(e) {
   console.log("connect!" + e.ready);
@@ -19,22 +35,6 @@ function(e) {
     points = [];
     return;
   }
-  if (e.payload.time_s) {
-    //console.log("time_s = " + e.payload.time_s);
-  }
-  if (e.payload.time_ms) {
-    //console.log("time_ms = " + e.payload.time_ms);
-  }
-  if (e.payload.x) {
-    //console.log("x = " + e.payload.x);
-  }
-  if (e.payload.y) {
-    //console.log("y = " + e.payload.y);
-  }
-  if (e.payload.z) {
-    //console.log("z = " + e.payload.z);
-  }
-
   points.push(e.payload);
 });
 
@@ -63,22 +63,18 @@ var getDistance = function (sorted) {
     sorted[i].time = (sorted[i].time_s) + (sorted[i].time_ms/1000);
     var dt = sorted[i].time - sorted[i-1].time;
 
-    //var ax = (sorted[i].x - ax0) / 100;
-    //var ay = (sorted[i].y - ay0) / 100;
-    //var az = (sorted[i].z - az0) / 100;
-
-    var ax = (sorted[i].x);// - ax0) / 100;
-    var ay = (sorted[i].y);// - ay0) / 100;
-    var az = (sorted[i].z);// - az0) / 100;
+    var ax = (sorted[i].x);
+    var ay = (sorted[i].y);
+    var az = (sorted[i].z);
 
     console.log("dt = " + dt);
     console.log("VX = " + ax);
     console.log("VY = " + ay);
     console.log("VZ = " + az);
 
-    var dx = /*vx * dt + 0.5 * */ax * dt; //* dt;
-    var dy = /*vy * dt + 0.5 * */ay * dt; //* dt;
-    var dz = /*vz * dt + 0.5 * */az * dt; //* dt;
+    var dx = ax * dt; 
+    var dy = ay * dt; 
+    var dz = az * dt; 
 
     px += dx;
     py += dy;
@@ -89,17 +85,6 @@ var getDistance = function (sorted) {
     	y: py,
     	z: pz
     });
-    //console.log("PX = " + px);
-    //console.log("PY = " + py);
-    //console.log("PZ = " + pz);
-
-    //vx += ax * dt;
-    //vy += ay * dt;
-    //vz += az * dt;
-
-    //console.log("VX = " + vx);
-    //console.log("VY = " + vy);
-    //console.log("VZ = " + vz);
 
     var s  = Math.sqrt(dx*dx + dy*dy + dz*dz);
     
@@ -111,11 +96,10 @@ var getDistance = function (sorted) {
   console.log(JSON.stringify({
   	data:real_points
   }));
+  webRequest({
+  	data:real_points
+  }, function(e){
+    if(!e)
+      console.log("Web data submitted!');
+  });
 };
-
-/*
-var point1 = {time: 1 , x:0 , y:2 , z:0};
-var point2 = {time: 2 , x:1 , y:0 , z:0};
-var point3 = {time: 3 , x:0 , y:0 , z:1};
-getDistance([point1, point2, point3]);
-*/
