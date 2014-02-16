@@ -15,14 +15,12 @@ int sumx = 0; int sumy = 0; int sumz = 0;
 //double time_last, time_now;
 int toggle = 0;
 AccelData v_out;
-AccelData accel_g;
-
 
 static void timer_callback(void *data) {
-  AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
+  /*AccelData accel = (AccelData) { .x = 0, .y = 0, .z = 0 };
   accel_service_peek(&accel);
   if(toggle == 1 || (counter < threshold && counter != 0) || lock_peek() != 0){
-    timer = app_timer_register(10 /* milliseconds */, timer_callback, NULL); 
+    timer = app_timer_register(10, timer_callback, NULL); 
   }
   //APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL: %d | %d | %d", accel.x, accel.y, accel.z);
   int sign_x = (accel.x - accel_g.x > 0 ? 1 : -1);
@@ -31,9 +29,9 @@ static void timer_callback(void *data) {
   v_out.x += ((accel.x - accel_g.x + sign_x * 50) / 100) * 100;
   v_out.y += ((accel.y - accel_g.y + sign_y * 50) / 100) * 100;
   v_out.z += ((accel.z - accel_g.z + sign_z * 50) / 100) * 100;
-
+  */
   counter++;
-
+  
   if (counter == threshold) {
     counter = 0;
 
@@ -56,13 +54,14 @@ static void timer_callback(void *data) {
     msg[4] = &msg_4;
     msg[5] = &msg_5;
 
-    
+    send_msg(6, msg);
+    /**
     total++;
-    bad += 0;//send_msg(6, msg);
+    bad += 0;//
     if ((double)bad/total > 0.1) {
       threshold += 5;
       bad = bad/2;
-    };
+    };**/
     free(msg);
   }
   
@@ -71,14 +70,17 @@ static void timer_callback(void *data) {
 static void handle_accel(AccelAxisType axis, int32_t direction) {
   switch(axis){
   	case ACCEL_AXIS_X:{
+  	    v_out = (AccelData) { .x = 100 * direction, .y = 0, .z = 0 };
   		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON X: %d", (int)direction);
   		break;
   	}
   	case ACCEL_AXIS_Y:{
+  		v_out = (AccelData) { .y = 100 * direction, .x = 0, .z = 0 };
   		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON Y: %d", (int)direction);
   		break;
   	}
   	case ACCEL_AXIS_Z:{
+  		v_out = (AccelData) { .z = 100 * direction, .y = 0, .x = 0 };
   		APP_LOG(APP_LOG_LEVEL_WARNING, "ACCEL ON Z: %d", (int)direction);
   		break;
   	}
@@ -106,7 +108,7 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
     lock_on();
     text_layer_set_text(text_layer,"Stopped!");
 
-    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", accel_g.x, accel_g.y, accel_g.z);
+    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", v_out.x, v_out.y, v_out.z);
     text_layer_set_text(text_layer,output);
 
     free(output);
@@ -116,10 +118,8 @@ static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
 
     text_layer_set_text(text_layer,"Measuring...");
     v_out = (AccelData) { .x = 0, .y = 0, .z = 0 };
-    accel_g = (AccelData) { .x = 0, .y = 0, .z = 0 };
-    accel_service_peek(&accel_g);
 
-    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", accel_g.x, accel_g.y, accel_g.z);
+    snprintf(output,99,"g_x:%d; g_y:%d; g_z:%d", v_out.x, v_out.y, v_out.z);
     text_layer_set_text(text_layer,output);
 
     free(output);
